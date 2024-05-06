@@ -1,0 +1,6 @@
+@ControlOctoberTechnologyUniversitySystem_HostAddress = http://localhost:5283
+
+GET {{ControlOctoberTechnologyUniversitySystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

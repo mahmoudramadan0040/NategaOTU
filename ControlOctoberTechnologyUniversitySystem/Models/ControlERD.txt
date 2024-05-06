@@ -1,0 +1,93 @@
+﻿{ System Of Control }
+=========================================================================================== done 
+Users ( uuid , id ,  date , fullname , firstname ,
+lastname , phone , image , status ,Constraint, graduated , *dept_id , *special_id )
+{ Description } 
+uuid is primary key 
+id is predefined by faculty 
+status is ( first , second , third , forth ) year 
+graduated is ( true - false ) 
+fullname is string 
+firstname is string 
+lastname  is string 
+phone is string 
+image is string url 
+Constraint is enumration ( fresh , Remaining one , Remaining two , Remaining three , FirstChance , SecondChance ) 
+dept_id is foriegn key 
+========================================================================================== done 
+Department ( uuid , Name ) 
+{ Description }
+uuid is primary key 
+name is string 
+total_users  is integer or numbers 
+
+========================================================================================== done 
+Specialization ( uuid , Name , *dept_id ) 
+{ Description }
+uuid is primary key 
+Name is string 
+dept_id is foreign key 
+
+========================================================================================== done 
+Subjects ( uuid , subject_code , name , numberOfHours , *dept_id ) 
+{ Description }
+uuid is primary key 
+subject_code is unique string 
+name is string 
+numberOfHours is integer or numbers 
+dept_id is foreign key 
+
+
+========================================================================================== done 
+User_subject( uuid , *user_id , *subject_id ,*dept_id , grade , score ) 
+{ Description }
+uuid is primary key 
+grade is enum 
+score is integer 
+user_id is foreign key 
+subject_id is foreign key 
+dept_id is foreign key 
+
+==========================================================================================
+
+
+
+
+features
+
+ControlSystem 
+-- user can add score to student in specific subject 
+-- user can display all users in specific department 
+-- user can select all user in specific department and status and add to studentSubject 
+-- user can modified student Contraint 
+-- user can display , add ,delete , update student information 
+-- user can login to system 
+-- user can register to system 
+-- user can import  users using excel file 
+
+
+
+Student 
+-- user can enter name and id and display own result in subject 
+
+Reporting
+-- user can print the Control Result 
+-- user can custmize print the control Result 
+-- user can calculate number of student passed in specific subject 
+
+
+
+
+Grade 
+profile 100
+24 < grade			-----> رل
+40 < grade			-----> ض جـ
+40 > grade < 60		-----> ض
+60 > grade < 65		-----> ل
+60 > grade < 75		-----> جـ //
+75 > grade < 85		-----> جـ جـ
+85 > grade <= 100	-----> م
+
+
+prfile 150
+
