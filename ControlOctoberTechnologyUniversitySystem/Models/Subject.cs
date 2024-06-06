@@ -3,8 +3,8 @@
     public class Subject: BaseEntity
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Subject_Code {  get; set; }
+        public string? Name { get; set; }
+        public string? Subject_Code {  get; set; }
         public int CreditHours { get; set; }
 
 
@@ -24,8 +24,11 @@
             }
         }
 
-        public ICollection<StudentSubject> StudentSubjects { get; set; }
-        public Department Department { get; set; }
+        public ICollection<Student> ? Students { get; set; }
+        public virtual ICollection<StudentSubject> ? StudentSubjects { get; set; }
+        public Department? Department { get; set; }
+        
+
     }
 
 

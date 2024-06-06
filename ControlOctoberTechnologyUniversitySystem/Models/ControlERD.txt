@@ -61,11 +61,20 @@ ControlSystem
 -- user can select all user in specific department and status and add to studentSubject 
 -- user can modified student Contraint 
 -- user can display , add ,delete , update student information 
--- user can login to system 
--- user can register to system 
--- user can import  users using excel file 
 
 
+-- user can login to system [ Done ]
+-- user can register to system [ Done ]
+-- user can import users data using excel file [ Done ]
+
+// create subject [ done ]
+// delete subject [ done ]
+// update subject [ done ]
+// get subject using id [ done ]
+// get all subjects [ done ]
+// get all student that enroll in specific subject [ done ]
+// enroll students to many subjects [ done ] 
+// unroll student from many subjects [ done ]
 
 Student 
 -- user can enter name and id and display own result in subject 

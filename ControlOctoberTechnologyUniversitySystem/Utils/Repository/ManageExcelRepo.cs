@@ -10,7 +10,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Utils.Repository
     public class ManageExcelRepo : IManageExcelFiles
     {
        
-        public void ImportStudentDataFromExcel(IFormFile file)
+        public List<Student> ImportStudentDataFromExcel(IFormFile file)
         {
             var stream = new MemoryStream();
             file.CopyTo(stream);
@@ -32,6 +32,8 @@ namespace ControlOctoberTechnologyUniversitySystem.Utils.Repository
                 ISheet sheet = workbook.GetSheetAt(0); // Assuming the first sheet
                 var data = new List<Student>();
 
+
+                // reading data from excel 
                 foreach(IRow excelRow in sheet)
                 {
                     if (excelRow.RowNum == 0) // Skip the header row
@@ -46,23 +48,20 @@ namespace ControlOctoberTechnologyUniversitySystem.Utils.Repository
                         var fullname = excelRow.GetCell(1).ToString().Trim() != null ?
                             excelRow.GetCell(1)?.ToString().Trim() : 
                             throw new Exception($"Data in Excel may have null value ! in row ${excelRow.RowNum}");
-                        
-                        
+
                         data.Add(new Student
                         {
                             student_id = student_id,
                             fullname = fullname
+
                         });
                     }
                 }
-
-
+                return data;
             }
             catch(Exception ex)
             {
-               
-
-                
+                throw new Exception($"can not import excel file ! ");
             }
 
 
@@ -84,6 +83,11 @@ namespace ControlOctoberTechnologyUniversitySystem.Utils.Repository
         {
             return Path.GetExtension(file.FileName).ToLower() != ".xlsx" &&
                 Path.GetExtension(file.FileName).ToLower() != ".xls" ? false : true;
+        }
+
+        public void ImportStudentSubjectFromExcel(IFormFile file, Subject subject)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,9 +1,13 @@
 using ControlOctoberTechnologyUniversitySystem.Models;
 using ControlOctoberTechnologyUniversitySystem.Models.Interfaces;
 using ControlOctoberTechnologyUniversitySystem.Models.Repository;
+using ControlOctoberTechnologyUniversitySystem.Utils.Interfaces;
+using ControlOctoberTechnologyUniversitySystem.Utils.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Reflection;
 
 //-------------------------------------------------------//
 //       Create Serilog configuration                   //
@@ -37,7 +41,17 @@ builder.Host.UseSerilog();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+    // Specify the XML documentation file path
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+    // Include the XML comments in the Swagger documentation
+    c.IncludeXmlComments(xmlPath);
+});
 
 
 //-------------------------------------------------------//
@@ -45,7 +59,7 @@ builder.Services.AddSwaggerGen();
 //-----------------------------------------------------//
 builder.Services.AddDbContext<ControlDbContext>(options => {
     options.UseSqlServer(
-        builder.Configuration["ConnectionStrings:ShopfyDbContextConnection"]);
+        builder.Configuration["ConnectionStrings:ControlDBContextConnection"]);
 });
 
 //-------------------------------------------------------//
@@ -66,7 +80,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(o =>
 //              activate service repos                  //
 //-----------------------------------------------------//
 
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IStudentRepo, StudentRepo>();
+builder.Services.AddScoped<ISubjectRepo, SubjectRepo>();
+builder.Services.AddScoped<IManageExcelFiles, ManageExcelRepo>();
+builder.Services.AddScoped<IManageImageRepo, ManageImageRepo>();
 
 
 var app = builder.Build();
