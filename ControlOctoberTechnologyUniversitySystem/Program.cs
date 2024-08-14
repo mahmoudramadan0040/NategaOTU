@@ -5,6 +5,7 @@ using ControlOctoberTechnologyUniversitySystem.Utils.Interfaces;
 using ControlOctoberTechnologyUniversitySystem.Utils.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
@@ -85,7 +86,18 @@ builder.Services.AddScoped<IStudentRepo, StudentRepo>();
 builder.Services.AddScoped<ISubjectRepo, SubjectRepo>();
 builder.Services.AddScoped<IManageExcelFiles, ManageExcelRepo>();
 builder.Services.AddScoped<IManageImageRepo, ManageImageRepo>();
-
+builder.Services.AddScoped<IDepartmentRepo, DepartmentRepo>();
+builder.Services.AddScoped<IGradeRepo, GradeRepo>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAny",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 
@@ -96,10 +108,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+    Path.Combine(builder.Environment.ContentRootPath, "Resources")),
+    RequestPath = "/resources"
+});
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors("AllowAny");
 app.Run();

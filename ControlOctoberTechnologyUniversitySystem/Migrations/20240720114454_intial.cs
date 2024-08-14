@@ -57,7 +57,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,52 +171,6 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Specializations",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Specializations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Specializations_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Subjects",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Subject_Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreditHours = table.Column<int>(type: "int", nullable: false),
-                    IsGeneralSubject = table.Column<bool>(type: "bit", nullable: false),
-                    MaxScore = table.Column<int>(type: "int", nullable: false),
-                    MaxSemesterScore = table.Column<int>(type: "int", nullable: false),
-                    MaxFinalExamScore = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Subjects", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Subjects_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
@@ -227,12 +181,10 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                     firstname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StudentStatus = table.Column<int>(type: "int", nullable: true),
+                    StudentStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     graduated = table.Column<bool>(type: "bit", nullable: true),
-                    StudentContraint = table.Column<int>(type: "int", nullable: false),
-                    image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudentContraint = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SpecializationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -243,12 +195,52 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                         name: "FK_Students_Departments_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subjects",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Subject_Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreditHours = table.Column<int>(type: "int", nullable: false),
+                    IsGeneralSubject = table.Column<bool>(type: "bit", nullable: false),
+                    MaxScore = table.Column<int>(type: "int", nullable: false),
+                    MaxSemesterScore = table.Column<int>(type: "int", nullable: false),
+                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subjects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_Specializations_SpecializationId",
-                        column: x => x.SpecializationId,
-                        principalTable: "Specializations",
+                        name: "FK_Subjects_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentImage",
+                columns: table => new
+                {
+                    StudentImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentImage", x => x.StudentImageId);
+                    table.ForeignKey(
+                        name: "FK_StudentImage_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -285,7 +277,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                     SemesterScore = table.Column<float>(type: "real", nullable: false),
                     FinalExamScore = table.Column<float>(type: "real", nullable: false),
                     totalScore = table.Column<float>(type: "real", nullable: false),
-                    grade = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    grade = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -344,19 +336,14 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Specializations_DepartmentId",
-                table: "Specializations",
-                column: "DepartmentId");
+                name: "IX_StudentImage_StudentId",
+                table: "StudentImage",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_DepartmentId",
                 table: "Students",
                 column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Students_SpecializationId",
-                table: "Students",
-                column: "SpecializationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentSubject_SubjectsId",
@@ -393,6 +380,9 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "StudentImage");
+
+            migrationBuilder.DropTable(
                 name: "StudentSubject");
 
             migrationBuilder.DropTable(
@@ -409,9 +399,6 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "Subjects");
-
-            migrationBuilder.DropTable(
-                name: "Specializations");
 
             migrationBuilder.DropTable(
                 name: "Departments");

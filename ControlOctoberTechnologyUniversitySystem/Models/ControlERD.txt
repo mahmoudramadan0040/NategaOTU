@@ -76,6 +76,14 @@ ControlSystem
 // enroll students to many subjects [ done ] 
 // unroll student from many subjects [ done ]
 
+
+// get all department  [ done ]
+// get department by id [ done ]
+// create department [ done ] 
+// delete department [ done ]
+// get all student in department [ done ]
+// get all subject in department [ done ]
+// update department 
 Student 
 -- user can enter name and id and display own result in subject 
 

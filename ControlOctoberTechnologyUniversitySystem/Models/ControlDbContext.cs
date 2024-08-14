@@ -10,7 +10,6 @@ namespace ControlOctoberTechnologyUniversitySystem.Models
         { }
         public DbSet<Student> Students { get; set; }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<Specialization> Specializations { get; set; }
         public DbSet<StudentSubject> StudentSubjects { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,19 +18,23 @@ namespace ControlOctoberTechnologyUniversitySystem.Models
             // Configuring the composite primary key for StudentSubject
             modelBuilder.Entity<StudentSubject>()
                 .HasKey(ss => new { ss.StudentId, ss.SubjectId });
-            // Configuring the relationship between Student and StudentSubject
-            modelBuilder.Entity<StudentSubject>()
-                .HasOne(ss => ss.student)
-                .WithMany(s => s.StudentSubjects)
-                .HasForeignKey(ss => ss.StudentId);
 
             // Configuring the relationship between Subject and StudentSubject
-            modelBuilder.Entity<StudentSubject>()
-                .HasOne(ss => ss.subject)
-                .WithMany(s => s.StudentSubjects)
-                .HasForeignKey(ss => ss.SubjectId);
             
 
+            modelBuilder.Entity<Student>()
+            .HasOne<Department>()  // Use HasOne without navigation property
+            .WithMany(s => s.Students)           // Use WithMany without navigation property
+            .HasForeignKey(s => s.DepartmentId)
+            .OnDelete(DeleteBehavior.SetNull); // Set delete behavior to SetNull
+
+
+            modelBuilder.Entity<StudentImage>()
+            .HasOne<Student>()
+            .WithMany(s => s.StudentImages)
+            .HasForeignKey(si => si.StudentId)
+            .OnDelete(DeleteBehavior.SetNull)
+            .IsRequired(false); // Ensure the foreign key is not required
         }
         public override int SaveChanges()
         {

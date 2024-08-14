@@ -8,9 +8,9 @@
          string? firstname ,
          string? lastname ,
          string? phone ,
-         StudentStatus? StudentStatus ,
+         string? StudentStatus ,
          bool? graduated ,
-         StudentContraint StudentContraint ,
-         IFormFile [] StudentImage
+         string? StudentContraint ,
+         IFormFile[]? StudentImage
     );
 }

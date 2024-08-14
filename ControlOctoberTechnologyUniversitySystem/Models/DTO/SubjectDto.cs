@@ -3,12 +3,11 @@
     public record SubjectDto
     (
         string? Name,
-        string? Subject_code,
+        string? Subject_Code,
         int CreditHours,
         bool IsGeneralSubject,
         int MaxScore,
-        int MaxSemesterScore,
-        Department Department
+        int MaxSemesterScore
 
 
     );

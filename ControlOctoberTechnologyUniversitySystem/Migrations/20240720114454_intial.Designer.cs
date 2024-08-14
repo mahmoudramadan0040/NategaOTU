@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControlOctoberTechnologyUniversitySystem.Migrations
 {
     [DbContext(typeof(ControlDbContext))]
-    [Migration("20240603191451_intial ")]
+    [Migration("20240720114454_intial")]
     partial class intial
     {
         /// <inheritdoc />
@@ -103,32 +103,11 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.Specialization", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DepartmentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.ToTable("Specializations");
                 });
 
             modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.Student", b =>
@@ -143,14 +122,11 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                     b.Property<Guid?>("DepartmentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("SpecializationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("StudentContraint")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentContraint")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StudentStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("StudentStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -163,9 +139,6 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
 
                     b.Property<bool?>("graduated")
                         .HasColumnType("bit");
-
-                    b.Property<string>("image")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("lastname")
                         .HasColumnType("nvarchar(max)");
@@ -183,9 +156,26 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("SpecializationId");
-
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.StudentImage", b =>
+                {
+                    b.Property<Guid>("StudentImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("StudentImageId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentImage");
                 });
 
             modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.StudentSubject", b =>
@@ -206,7 +196,6 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("grade")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("totalScore")
@@ -231,14 +220,11 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                     b.Property<int>("CreditHours")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("DepartmentId")
+                    b.Property<Guid?>("DepartmentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsGeneralSubject")
                         .HasColumnType("bit");
-
-                    b.Property<int>("MaxFinalExamScore")
-                        .HasColumnType("int");
 
                     b.Property<int>("MaxScore")
                         .HasColumnType("int");
@@ -247,11 +233,9 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Subject_Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -412,26 +396,20 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                     b.ToTable("StudentSubject");
                 });
 
-            modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.Specialization", b =>
-                {
-                    b.HasOne("ControlOctoberTechnologyUniversitySystem.Models.Department", "Department")
-                        .WithMany("Specializations")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-                });
-
             modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.Student", b =>
                 {
                     b.HasOne("ControlOctoberTechnologyUniversitySystem.Models.Department", null)
                         .WithMany("Students")
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
 
-                    b.HasOne("ControlOctoberTechnologyUniversitySystem.Models.Specialization", null)
-                        .WithMany("Students")
-                        .HasForeignKey("SpecializationId");
+            modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.StudentImage", b =>
+                {
+                    b.HasOne("ControlOctoberTechnologyUniversitySystem.Models.Student", null)
+                        .WithMany("StudentImages")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.StudentSubject", b =>
@@ -457,9 +435,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                 {
                     b.HasOne("ControlOctoberTechnologyUniversitySystem.Models.Department", "Department")
                         .WithMany("Subjects")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentId");
 
                     b.Navigation("Department");
                 });
@@ -532,20 +508,15 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
 
             modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.Department", b =>
                 {
-                    b.Navigation("Specializations");
-
                     b.Navigation("Students");
 
                     b.Navigation("Subjects");
                 });
 
-            modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.Specialization", b =>
-                {
-                    b.Navigation("Students");
-                });
-
             modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.Student", b =>
                 {
+                    b.Navigation("StudentImages");
+
                     b.Navigation("StudentSubjects");
                 });
 

@@ -12,8 +12,6 @@
         public virtual Student? student { get; set; }
         
         public virtual Subject? subject { get; set; }
-
-
     }
 
     

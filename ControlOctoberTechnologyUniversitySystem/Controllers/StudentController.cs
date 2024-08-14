@@ -20,9 +20,9 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
             
             public bool? graduated;
             
-            public int? StudentConstraint;
+            public string? StudentConstraint;
     
-            public int? StudentStatus;
+            public string? StudentStatus;
         }
         private readonly IStudentRepo _studentRepo;
         private readonly ILogger<StudentController> _logger;
@@ -74,9 +74,24 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
             }
         }
 
-        
-        
-        [HttpGet("student/filter")]
+
+        /// <summary>
+        /// Enrolls students in subjects.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/students/filter
+        ///     params [
+        ///         graduated,
+        ///         StudentConstraint,
+        ///         StudentStatus
+        ///     ]
+        ///
+        /// </remarks>
+        /// <param name="enroll">The enrollment details.</param>
+        /// <returns>Returns the result of the enrollment process.</returns>
+        [HttpGet("filter")]
         [ProducesResponseType(201)]
         public async  Task<ActionResult<IEnumerable<Student>>> GetFilterStudent(
             [FromQuery] StudentFilter filter) {
@@ -140,24 +155,30 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
                     _logger.LogError("Invalid object sent from client ! ");
                     return BadRequest("Invalid student object !");
                 }
-                // check the files is images or not
-                foreach (var img in student.StudentImage)
-                {
-                    if (!img.IsImage())
-                        return BadRequest($"this file is not image ${img.FileName}");
-                }
                 var studentMap = _mapper.Map<Student>(student);
-                List<StudentImage> StudentImages = new List<StudentImage>();
-                studentMap.StudentImages = new List<StudentImage>();
-                foreach( var img in student.StudentImage)
+
+                if (student.StudentImage != null)
                 {
-                    var url = await _manageImageRepo.AddImage(img);
-                    StudentImage image = new StudentImage
+                    // check the files is images or not
+                    foreach (var img in student.StudentImage)
                     {
-                        ImageUrl = url
-                    };
-                    studentMap.StudentImages.Add(image);
+                        if (!img.IsImage())
+                            return BadRequest($"this file is not image ${img.FileName}");
+                    }
+
+                    List<StudentImage> StudentImages = new List<StudentImage>();
+                    studentMap.StudentImages = new List<StudentImage>();
+                    foreach (var img in student.StudentImage)
+                    {
+                        var url = await _manageImageRepo.AddImage(img);
+                        StudentImage image = new StudentImage
+                        {
+                            ImageUrl = url
+                        };
+                        studentMap.StudentImages.Add(image);
+                    }
                 }
+                
                 
                 
                 

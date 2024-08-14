@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using ControlOctoberTechnologyUniversitySystem.Models;
 using ControlOctoberTechnologyUniversitySystem.Models.DTO;
+using ControlOctoberTechnologyUniversitySystem.Models.Interfaces;
 using ControlOctoberTechnologyUniversitySystem.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NPOI.OpenXmlFormats.Dml;
+using static Azure.Core.HttpHeader;
 using static ControlOctoberTechnologyUniversitySystem.Controllers.SubjectController;
 
 namespace ControlOctoberTechnologyUniversitySystem.Controllers
@@ -15,12 +17,12 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
     public class SubjectController : ControllerBase
     {
         
-        private readonly SubjectRepo _subjectRepo;
-        private readonly Mapper _mapper;
+        private readonly ISubjectRepo _subjectRepo;
+        private readonly IMapper _mapper;
         private readonly ILogger<SubjectController> _logger;
         public SubjectController(
-            SubjectRepo subjectRepo,
-            Mapper mapper,
+            ISubjectRepo subjectRepo,
+            IMapper mapper,
             ILogger<SubjectController> logger)
         {
             _subjectRepo = subjectRepo;
@@ -30,11 +32,11 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
 
         public class Enroll
         {
-           public Guid[] StudentIds;
-           public Guid[] SubjectIds;
+           public Guid[] StudentIds { get; set; } = new Guid[] { };
+           public Guid[] SubjectIds { get; set; } = new Guid[] { };
         }
         [HttpGet]
-        public ActionResult<IEnumerable<Subject>> Get()
+        public ActionResult<IEnumerable<Subject>> Getsubject()
         {
             try
             {
@@ -197,15 +199,22 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
             }
         }
 
-        [HttpPut]
-        public IActionResult UpdateSubject(SubjectDto subject)
+        [HttpPut("subject/{subjectId}")]
+        public IActionResult UpdateSubject(SubjectDto subject,Guid subjectId)
         {
             try
             {
                 if (subject == null)
                     return BadRequest();
+                var currentSubject = _subjectRepo.GetSubjectById(subjectId);
+                if(currentSubject == null)
+                {
+                    return NotFound();
+                }
+                
                 var subjectMap = _mapper.Map<Subject>(subject);
-                var result = _subjectRepo.UpdateSubject(subjectMap);
+                 /*subjectMap.Id = subjectId;*/
+                var result = _subjectRepo.UpdateSubject(subjectMap, subjectId);
                 return Accepted(result);
             }
             catch (Exception ex)

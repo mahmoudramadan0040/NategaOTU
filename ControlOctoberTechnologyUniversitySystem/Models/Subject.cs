@@ -18,17 +18,14 @@
 
                 return MaxScore - MaxSemesterScore;
             }
-            set
-            {
-                MaxFinalExamScore = MaxScore - MaxSemesterScore;
-            }
         }
-
-        public ICollection<Student> ? Students { get; set; }
-        public virtual ICollection<StudentSubject> ? StudentSubjects { get; set; }
-        public Department? Department { get; set; }
         
-
+        
+       
+        public virtual ICollection<StudentSubject>? StudentSubjects { get; set; }
+        public virtual Department? Department { get; set; }
+        // Nullable foreign key
+        public Guid? DepartmentId { get; set; }
     }
 
 

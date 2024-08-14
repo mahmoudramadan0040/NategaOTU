@@ -59,10 +59,10 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
             IQueryable<Student> query = _context.Students;
             if (filter.graduated.HasValue)
                 query =query.Where(s => s.graduated ==  filter.graduated);
-            if (filter.StudentConstraint.HasValue)
-                query = query.Where(s => (int)s.StudentContraint == filter.StudentConstraint );
-            if (filter.StudentStatus.HasValue) 
-                query =query.Where(s => (int)s.StudentStatus == filter.StudentStatus);
+            if (!string.IsNullOrEmpty(filter.StudentConstraint))
+                query = query.Where(s => s.StudentContraint == filter.StudentConstraint );
+            if (!string.IsNullOrEmpty(filter.StudentStatus)) 
+                query =query.Where(s => s.StudentStatus == filter.StudentStatus);
             return await query.ToListAsync();
         }
 
