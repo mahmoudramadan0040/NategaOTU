@@ -3,12 +3,15 @@ using ControlOctoberTechnologyUniversitySystem.Models.Interfaces;
 using ControlOctoberTechnologyUniversitySystem.Models.Repository;
 using ControlOctoberTechnologyUniversitySystem.Utils.Interfaces;
 using ControlOctoberTechnologyUniversitySystem.Utils.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
+using System.Text;
 
 //-------------------------------------------------------//
 //       Create Serilog configuration                   //
@@ -76,7 +79,28 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(o =>
     o.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<ControlDbContext>()
 .AddDefaultTokenProviders();
+// Adding Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
 
+// Adding Jwt Bearer
+.AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+    };
+});
 //-------------------------------------------------------//
 //              activate service repos                  //
 //-----------------------------------------------------//
@@ -121,3 +145,4 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseCors("AllowAny");
 app.Run();
+public partial class Program { }

@@ -51,6 +51,22 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+        [HttpGet("report")]
+        public async Task<ActionResult<List<DepartmentReportDto>>> GetDeaprtmentsReports()
+        {
+            try
+            {
+                var depatments = await _departmentRepo.GetAllDepartmentsWithStatistics();
+                if (depatments == null)
+                    return NotFound();
+                return Ok(depatments);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"can not get category  : {ex}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
         [HttpGet("department/{departmentId}")]
         public IActionResult GetDepartment(Guid departmentId)
         {

@@ -177,20 +177,21 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
 
             modelBuilder.Entity("ControlOctoberTechnologyUniversitySystem.Models.StudentSubject", b =>
                 {
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SubjectId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<float>("FinalExamScore")
                         .HasColumnType("real");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<float>("SemesterScore")
                         .HasColumnType("real");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("grade")
                         .HasColumnType("nvarchar(max)");
@@ -198,7 +199,9 @@ namespace ControlOctoberTechnologyUniversitySystem.Migrations
                     b.Property<float>("totalScore")
                         .HasColumnType("real");
 
-                    b.HasKey("StudentId", "SubjectId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
 
                     b.HasIndex("SubjectId");
 

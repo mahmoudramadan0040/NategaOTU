@@ -1,5 +1,7 @@
-﻿using ControlOctoberTechnologyUniversitySystem.Models.Interfaces;
+﻿using ControlOctoberTechnologyUniversitySystem.Models.DTO;
+using ControlOctoberTechnologyUniversitySystem.Models.Interfaces;
 using MathNet.Numerics.Distributions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
 {
@@ -131,5 +133,24 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
             _context.SaveChanges();
             return department;
         }
+
+        public  Task<List<DepartmentReportDto>> GetAllDepartmentsWithStatistics()
+        {
+            var report = _context.Departments
+                .Include(d => d.Students)
+                .Include(d => d.Subjects)
+                .Select(d => new DepartmentReportDto
+                {
+                departmentId = d.Id,
+                departmentName = d.Name,
+                numberOfStudents = d.Students.Count(),
+                numberOfSubjects = d.Subjects.Count()
+            }).ToListAsync();
+
+            return report;
+            
+        }
+
+        
     }
 }

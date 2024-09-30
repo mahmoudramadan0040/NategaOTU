@@ -93,8 +93,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
         /// <returns>Returns the result of the enrollment process.</returns>
         [HttpGet("filter")]
         [ProducesResponseType(201)]
-        public async  Task<ActionResult<IEnumerable<Student>>> GetFilterStudent(
-            [FromQuery] StudentFilter filter) {
+        public async  Task<ActionResult<IEnumerable<Student>>> GetFilterStudent([FromQuery] StudentFilter filter) {
             try
             {
                 // without filter its return all student in system 

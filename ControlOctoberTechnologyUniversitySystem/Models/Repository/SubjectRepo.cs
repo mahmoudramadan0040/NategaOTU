@@ -91,9 +91,11 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
                             student =student
 
                         };
+                        // Add StudentSubject to DbContext
+                        _context.StudentSubjects.Add(studentSubject);
+
                     }
-                    // Add StudentSubject to DbContext
-                    _context.StudentSubjects.Add(studentSubject);
+                    
                 }
                     await _context.SaveChangesAsync();
             }

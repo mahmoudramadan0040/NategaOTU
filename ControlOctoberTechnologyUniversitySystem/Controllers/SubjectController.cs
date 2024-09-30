@@ -2,13 +2,9 @@
 using ControlOctoberTechnologyUniversitySystem.Models;
 using ControlOctoberTechnologyUniversitySystem.Models.DTO;
 using ControlOctoberTechnologyUniversitySystem.Models.Interfaces;
-using ControlOctoberTechnologyUniversitySystem.Models.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using NPOI.OpenXmlFormats.Dml;
-using static Azure.Core.HttpHeader;
-using static ControlOctoberTechnologyUniversitySystem.Controllers.SubjectController;
+
+
 
 namespace ControlOctoberTechnologyUniversitySystem.Controllers
 {

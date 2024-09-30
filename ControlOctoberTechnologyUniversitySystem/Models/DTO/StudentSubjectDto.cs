@@ -2,11 +2,11 @@
 {
     public record StudentSubjectDto
     (
-    float SemesterScore ,
-    float FinalExamScore ,
-    float totalScore ,
+    float? SemesterScore ,
+    float? FinalExamScore ,
+    float? totalScore ,
     string? grade ,
-    Guid StudentId ,
-    Guid SubjectId 
+    Guid? StudentId ,
+    Guid? SubjectId 
     );
 }

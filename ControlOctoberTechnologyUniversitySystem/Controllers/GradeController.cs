@@ -68,6 +68,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
                 if (StudentSubject == null)
                     return BadRequest();
                 var StudentSubjectMap = _mapper.Map<StudentSubject>(StudentSubject);
+                Console.WriteLine("-=========================================="+StudentSubjectMap.Id + "===========================");
                 var result =_gradeRepo.AddStudentGrade(StudentSubjectMap);
                 return Ok(result);
             }

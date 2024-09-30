@@ -9,7 +9,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.DTO
             CreateMap<StudentDto,Student>();
             CreateMap<SubjectDto,Subject>();
             CreateMap<DepartmentDto,Department>();
-            CreateMap<StudentSubjectDto,StudentSubject>();
+            CreateMap<StudentSubjectDto, StudentSubject>();
         }
     }
 }

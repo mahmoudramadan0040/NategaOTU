@@ -1,4 +1,6 @@
-﻿namespace ControlOctoberTechnologyUniversitySystem.Models.Interfaces
+﻿using ControlOctoberTechnologyUniversitySystem.Models.DTO;
+
+namespace ControlOctoberTechnologyUniversitySystem.Models.Interfaces
 {
     public interface IDepartmentRepo
     {
@@ -11,7 +13,7 @@
         public IEnumerable<Subject> GetSubjectsByDepartment(Guid departmentId);
         public Task enrollStudentsInDepartment(Guid departmentId , Guid[] studentIds);
         public Task UnrollStudentsFromDepartment(Guid departmentId, Guid[] studentIds );
-
+        public Task<List<DepartmentReportDto>> GetAllDepartmentsWithStatistics();
         public void addSubjectToDepartment(Guid departmentId, Guid subjectId);
         public void removeSubjectFromDepartment(Guid departmentId, Guid subjectId);
 

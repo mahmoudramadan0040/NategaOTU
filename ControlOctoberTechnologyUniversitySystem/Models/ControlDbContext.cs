@@ -16,8 +16,8 @@ namespace ControlOctoberTechnologyUniversitySystem.Models
         {
             base.OnModelCreating(modelBuilder);
             // Configuring the composite primary key for StudentSubject
-            modelBuilder.Entity<StudentSubject>()
-                .HasKey(ss => new { ss.StudentId, ss.SubjectId });
+            /*modelBuilder.Entity<StudentSubject>()
+                .HasKey(ss => new { ss.StudentId, ss.SubjectId });*/
 
             // Configuring the relationship between Subject and StudentSubject
             

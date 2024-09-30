@@ -1,7 +1,11 @@
-﻿namespace ControlOctoberTechnologyUniversitySystem.Models
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+namespace ControlOctoberTechnologyUniversitySystem.Models
 {
     public class StudentSubject
     {
+        [Key]
         public Guid Id { get; set; }
         public float SemesterScore { get; set; }
         public float FinalExamScore { get; set; }
