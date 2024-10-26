@@ -1,3 +1,4 @@
+using ControlOctoberTechnologyUniversitySystem.BusinessLogic;
 using ControlOctoberTechnologyUniversitySystem.Models;
 using ControlOctoberTechnologyUniversitySystem.Models.Interfaces;
 using ControlOctoberTechnologyUniversitySystem.Models.Repository;
@@ -43,7 +44,6 @@ builder.Host.UseSerilog();
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -112,6 +112,7 @@ builder.Services.AddScoped<IManageExcelFiles, ManageExcelRepo>();
 builder.Services.AddScoped<IManageImageRepo, ManageImageRepo>();
 builder.Services.AddScoped<IDepartmentRepo, DepartmentRepo>();
 builder.Services.AddScoped<IGradeRepo, GradeRepo>();
+builder.Services.AddScoped<IControllRole, ControlRole>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAny",
@@ -126,7 +127,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction() )
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -139,10 +140,26 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/resources"
 });
 app.UseHttpsRedirection();
+app.MapGet("/", async (EndpointDataSource endpointDataSource) =>
+{
+    var sb = new StringBuilder();
+    sb.AppendLine("Available Routes:");
 
+    foreach (var endpoint in endpointDataSource.Endpoints)
+    {
+        if (endpoint is RouteEndpoint routeEndpoint)
+        {
+            sb.AppendLine($"{routeEndpoint.DisplayName} - {routeEndpoint.RoutePattern}");
+        }
+    }
+
+    return sb.ToString();
+});
+app.UseRouting();
 app.UseAuthorization();
-
-app.MapControllers();
 app.UseCors("AllowAny");
+app.MapControllers();
+
+Log.Information("===================Mapped Controllers=================");
 app.Run();
 public partial class Program { }

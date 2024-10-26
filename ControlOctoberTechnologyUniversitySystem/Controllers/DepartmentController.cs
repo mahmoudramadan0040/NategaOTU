@@ -133,16 +133,16 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-        [HttpPost("department/{departmentId}/subject/{subjectId}")]
-        public IActionResult AddSubjectToDepartment(Guid departmentId , Guid subjectId)
+        [HttpPost("department/{departmentId}/subjects")]
+        public IActionResult AddSubjectsToDepartment(Guid departmentId , [FromBody] Guid[] subjectIds)
         {
             try
             {
                 var department = _departmentRepo.GetDepartment(departmentId);
                 if (department == null)
                     return NotFound();
-                _departmentRepo.addSubjectToDepartment(departmentId, subjectId);
-                return Accepted("Subject is  Added successfully !");
+                _departmentRepo.addSubjectToDepartment(departmentId, subjectIds);
+                return Accepted("Subjects is  Added successfully !");
             }
             catch (Exception ex)
             {

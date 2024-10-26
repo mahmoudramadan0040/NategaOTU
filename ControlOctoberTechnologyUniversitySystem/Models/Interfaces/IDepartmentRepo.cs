@@ -14,7 +14,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Interfaces
         public Task enrollStudentsInDepartment(Guid departmentId , Guid[] studentIds);
         public Task UnrollStudentsFromDepartment(Guid departmentId, Guid[] studentIds );
         public Task<List<DepartmentReportDto>> GetAllDepartmentsWithStatistics();
-        public void addSubjectToDepartment(Guid departmentId, Guid subjectId);
+        public void addSubjectToDepartment(Guid departmentId, Guid[] subjectIds);
         public void removeSubjectFromDepartment(Guid departmentId, Guid subjectId);
 
 

@@ -54,7 +54,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
                 throw new ArgumentException($"department with this id => {departmentId} not exists ");
             foreach (var studentId in studentIds)
             {
-                Console.WriteLine("------------------------------"+studentId.ToString());
+
                 var student = _context.Students.Find(studentId);
                 if (student == null)
                 {
@@ -67,21 +67,21 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
 
 
         }
-        public void addSubjectToDepartment(Guid departmentId, Guid subjectId)
+        public void addSubjectToDepartment(Guid departmentId, Guid[] subjectIds)
         {
             var department = _context.Departments.FirstOrDefault(d => d.Id == departmentId);
             if (department == null)
                 throw new ArgumentException($"department with this id => {departmentId} not exists ");
-
-            var subject = _context.Subjects.FirstOrDefault(s => s.Id == subjectId);
-            if (subject == null)
-                throw new ArgumentException($"subject with this id => {subjectId} not exists ");
-            var existingEnroll = _context.Subjects.FirstOrDefault(s => s.Department.Id == departmentId);
-            if (existingEnroll == null)
+            foreach (var subjectId in subjectIds)
             {
+                var subject = _context.Subjects.FirstOrDefault(s => s.Id == subjectId);
+                if (subject == null)
+                    throw new ArgumentException($"subject with this id => {subjectId} not exists ");
                 subject.Department = department;
                 _context.SaveChanges();
+                
             }
+            
         }
         public void removeSubjectFromDepartment(Guid departmentId, Guid subjectId)
         {
@@ -119,7 +119,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
 
         public IEnumerable<Subject> GetSubjectsByDepartment(Guid departmentId)
         {
-            return _context.Subjects.Where(x => x.Department.Id==departmentId);
+            return _context.Subjects.Where(x => x.DepartmentId == departmentId);
 
         }
 

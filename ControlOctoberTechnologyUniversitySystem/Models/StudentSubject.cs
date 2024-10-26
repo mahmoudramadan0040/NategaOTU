@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ControlOctoberTechnologyUniversitySystem.Models
 {
@@ -13,8 +14,9 @@ namespace ControlOctoberTechnologyUniversitySystem.Models
         public string? grade { get; set; }
         public Guid StudentId { get; set; }
         public Guid SubjectId { get; set; }
+        [JsonIgnore]
         public virtual Student? student { get; set; }
-        
+        [JsonIgnore]
         public virtual Subject? subject { get; set; }
     }
 

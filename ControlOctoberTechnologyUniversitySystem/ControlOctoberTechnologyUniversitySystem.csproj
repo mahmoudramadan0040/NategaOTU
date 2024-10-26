@@ -8,6 +8,7 @@
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
+		<UserSecretsId>120f9b74-95f6-4232-8e29-28d41e3179ce</UserSecretsId>
 	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
@@ -38,5 +39,7 @@
   <ItemGroup>
     <Folder Include="Logs\" />
   </ItemGroup>
-
+<ItemGroup>
+	<Content Include="Resources\**\*" CopyToOutputDirectory="PreserveNewest" />
+</ItemGroup>
 </Project>

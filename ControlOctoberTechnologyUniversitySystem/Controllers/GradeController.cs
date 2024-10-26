@@ -5,6 +5,8 @@ using ControlOctoberTechnologyUniversitySystem.Models.Interfaces;
 using ControlOctoberTechnologyUniversitySystem.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Linq;
 
 namespace ControlOctoberTechnologyUniversitySystem.Controllers
 {
@@ -59,22 +61,26 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult AddStudentGrade(StudentSubjectDto StudentSubject)
+        [HttpPut("{subjectId}")]
+        public async Task<IActionResult> AddStudentGrade(StudentSubjectDto[] StudentSubjects , Guid subjectId)
         {
             try
             {
-
-                if (StudentSubject == null)
+                List<StudentSubject> studentSubjects = new List<StudentSubject>();
+                if (StudentSubjects == null)
                     return BadRequest();
-                var StudentSubjectMap = _mapper.Map<StudentSubject>(StudentSubject);
-                Console.WriteLine("-=========================================="+StudentSubjectMap.Id + "===========================");
-                var result =_gradeRepo.AddStudentGrade(StudentSubjectMap);
+                foreach(var studentSubject in StudentSubjects)
+                {
+                    var StudentSubjectMap = _mapper.Map<StudentSubject>(studentSubject);
+
+                    studentSubjects.Add(StudentSubjectMap);
+                }
+                var result =await _gradeRepo.AddStudentGrade(studentSubjects,subjectId);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"can not get category  : {ex}");
+                _logger.LogError($"can not add student Grade : {ex}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -91,7 +97,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"can not get category  : {ex}");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(404, $"Can not delete Subject With Id: {subjectId} and student with Id : {studentId} !");
             }
         }
         

@@ -8,7 +8,7 @@
         // student add 
         public IEnumerable<StudentSubject> GetStudentGradesInSubjects(Guid studentId);
         public StudentSubject GetStudentGradeInSubject(Guid studentId, Guid subjectId);
-        public StudentSubject AddStudentGrade(StudentSubject studentSubject);
+        public Task<List<StudentSubject>> AddStudentGrade(List<StudentSubject> studentsSubjects, Guid subjectId);
         public void DeleteStudentGrade(Guid studentId,Guid subjectId);
         public StudentSubject UpdateStudentGrade(StudentSubject studentSubject);
 
