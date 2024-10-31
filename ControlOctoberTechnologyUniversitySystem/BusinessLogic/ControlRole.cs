@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text.Json;
 
 namespace ControlOctoberTechnologyUniversitySystem.BusinessLogic
 {
@@ -86,6 +87,8 @@ namespace ControlOctoberTechnologyUniversitySystem.BusinessLogic
                 throw new Exception($"Data is not defined !{ex.Message}");
             }
         }
+
+
         // this function is calculate the grade of special subject 
         public string  CalculateGrade(float MaxScore ,float FinalScore,float SemesterScore = 0 )
         {
@@ -111,5 +114,7 @@ namespace ControlOctoberTechnologyUniversitySystem.BusinessLogic
             }
 
         }
+
+        
     }
 }

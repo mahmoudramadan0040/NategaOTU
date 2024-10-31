@@ -1,6 +1,8 @@
 ﻿
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Text.Json;
 
 namespace ControlOctoberTechnologyUniversitySystem.Models
 {
@@ -35,6 +37,10 @@ namespace ControlOctoberTechnologyUniversitySystem.Models
             .HasForeignKey(si => si.StudentId)
             .OnDelete(DeleteBehavior.SetNull)
             .IsRequired(false); // Ensure the foreign key is not required
+
+
+           
+
         }
         public override int SaveChanges()
         {

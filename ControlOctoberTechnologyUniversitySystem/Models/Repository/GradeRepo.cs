@@ -23,21 +23,17 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
         }
         public async Task<List<StudentSubject>> AddStudentGrade(List<StudentSubject> studentsSubjects, Guid subjectId)
         {
+            var resultList = new List<StudentSubject>();  // To store the result (existing or new grades)
             // get the subject information to use right calculate
             var subjectInfo = _context.Subjects.FirstOrDefault(s => s.Id == subjectId) 
                 ?? throw new ArgumentException($"Subject with this id => {subjectId} not exists ");
-            var resultList = new List<StudentSubject>();  // To store the result (existing or new grades)
 
             if (studentsSubjects == null || studentsSubjects.Count == 0)
-            {
                 _logger.LogWarning("No student subjects provided.");
-                /*throw new ArgumentException($"No student subjects provided.");*/
-            }
+            
             
             foreach (StudentSubject studentSubject in studentsSubjects)
             {
-
-
                 var existingGrade = _context.StudentSubjects
                     .Where(s => s.SubjectId == subjectId && s.StudentId == studentSubject.StudentId)
                     .FirstOrDefault();
@@ -47,17 +43,19 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
 
                     existingGrade.FinalExamScore= studentSubject.FinalExamScore;
                     existingGrade.SemesterScore= studentSubject.SemesterScore; 
-                    existingGrade.totalScore= studentSubject.totalScore;
+                    existingGrade.TotalScore= studentSubject.TotalScore;
                     if (subjectInfo.IsGeneralSubject)
-                    {
-                        var grade = _controlRole.CalclateGeneralGrade(subjectInfo.MaxScore, studentSubject.FinalExamScore, studentSubject.SemesterScore);
-                        existingGrade.grade = grade;
-                    }
+                        if(studentSubject.FinalExamScore.ValueKind == JsonValueKind.Number)
+                            existingGrade.grade = _controlRole.CalclateGeneralGrade(subjectInfo.MaxScore, studentSubject.FinalExamScore.GetSingle(), studentSubject.SemesterScore.GetSingle());
+                        else
+                            existingGrade.grade = _controlRole.StatusOther(studentSubject.FinalExamScore.GetString() ?? throw new ArgumentNullException(" final exam can not be null ! ") );
                     else
-                    {
-                        var grade = _controlRole.CalculateGrade(subjectInfo.MaxScore, studentSubject.FinalExamScore, studentSubject.SemesterScore);
-                        existingGrade.grade = grade;
-                    }
+                        if (studentSubject.FinalExamScore.ValueKind == JsonValueKind.Number)
+                            existingGrade.grade = _controlRole.CalculateGrade(subjectInfo.MaxScore, studentSubject.FinalExamScore.GetSingle(), studentSubject.SemesterScore.GetSingle());
+                        else
+                            existingGrade.grade = _controlRole.StatusOther(studentSubject.FinalExamScore.GetString() ?? throw new ArgumentNullException(" final exam can not be null ! "));
+
+                    
                     _context.StudentSubjects.Update(existingGrade);
                     resultList.Add(existingGrade);
 
@@ -66,17 +64,16 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
                 else
                 {
                     if (subjectInfo.IsGeneralSubject)
-                    {
-
-                        var grade = _controlRole.CalclateGeneralGrade(subjectInfo.MaxScore, studentSubject.FinalExamScore, studentSubject.SemesterScore);
-                        studentSubject.grade = grade;
-                    }
+                        if (studentSubject.FinalExamScore.ValueKind == JsonValueKind.Number)
+                            studentSubject.grade = _controlRole.CalclateGeneralGrade(subjectInfo.MaxScore, studentSubject.FinalExamScore.GetSingle(), studentSubject.SemesterScore.GetSingle());
+                        else
+                            studentSubject.grade = _controlRole.StatusOther(studentSubject.FinalExamScore.GetString() ?? throw new ArgumentNullException(" final exam can not be null ! "));
                     else
-                    {
-
-                        var grade = _controlRole.CalculateGrade(subjectInfo.MaxScore, studentSubject.FinalExamScore, studentSubject.SemesterScore);
-                        studentSubject.grade = grade;
-                    }
+                        if (studentSubject.FinalExamScore.ValueKind == JsonValueKind.Number)
+                            studentSubject.grade = _controlRole.CalculateGrade(subjectInfo.MaxScore, studentSubject.FinalExamScore.GetSingle(), studentSubject.SemesterScore.GetSingle());
+                        else
+                            studentSubject.grade = _controlRole.StatusOther(studentSubject.FinalExamScore.GetString() ?? throw new ArgumentNullException(" final exam can not be null ! "));
+                    
                     _context.StudentSubjects.Add(studentSubject);
                     resultList.Add(studentSubject);
                 }
@@ -85,6 +82,26 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
             await _context.SaveChangesAsync();
             return resultList;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public void DeleteStudentGrade(Guid studentId, Guid subjectId)
         {
