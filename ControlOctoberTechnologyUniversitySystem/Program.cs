@@ -113,6 +113,8 @@ builder.Services.AddScoped<IManageImageRepo, ManageImageRepo>();
 builder.Services.AddScoped<IDepartmentRepo, DepartmentRepo>();
 builder.Services.AddScoped<IGradeRepo, GradeRepo>();
 builder.Services.AddScoped<IControllRole, ControlRole>();
+builder.Services.AddScoped<IReportRepo, ReportRepo>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAny",
