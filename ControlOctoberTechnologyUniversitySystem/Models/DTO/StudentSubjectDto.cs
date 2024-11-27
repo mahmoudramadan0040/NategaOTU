@@ -7,7 +7,7 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.DTO
     JsonElement? SemesterScore ,
     JsonElement? FinalExamScore ,
     JsonElement? totalScore ,
-    string? grade ,
+    // string? grade ,
     Guid? StudentId ,
     Guid? SubjectId 
     );

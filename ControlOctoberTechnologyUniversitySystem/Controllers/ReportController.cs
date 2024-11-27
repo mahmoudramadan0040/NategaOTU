@@ -21,11 +21,11 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
         }
 
         [HttpGet("/natega/{departmentId}/{studentStatus}")]
-        public IActionResult GetNatega(Guid departmentId,string studentStatus, [FromBody] Guid[]? subjectIds )
+        public IActionResult GetNatega(Guid departmentId,string studentStatus, [FromQuery] Guid[]? subjectIds )
         {
             try
             {
-                var result = _reportRepo.NategaReport(departmentId, studentStatus, subjectIds);
+                var result =  _reportRepo.NategaReport(departmentId, studentStatus, subjectIds).Result;
                 if (result == null )
                 {
                     return NotFound();
@@ -39,19 +39,26 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
             }
         }
 
-        /*[HttpGet("/subject-report/{subjectId}/{studentStatus}")]
-        public IActionResult GetSubjectGrades(Guid departmentId, string studentStatus)
+
+
+        [HttpGet("/subject-report/{departmentId}/{studentStatus}")]
+        public IActionResult GetReportofSubjectsGrades(Guid departmentId, string studentStatus,[FromQuery] Guid[]? subjectIds)
         {
             try
             {
-
+                var result =  _reportRepo.SubjectsReports(departmentId, studentStatus, subjectIds).Result;
+                if (result == null )
+                {
+                    return NotFound();
+                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"can not get category  : {ex}");
+                _logger.LogError($"can not get subjects report  : {ex}");
                 return StatusCode(500, "Internal server error");
             }
-        }*/
+        }
 
     }
 }

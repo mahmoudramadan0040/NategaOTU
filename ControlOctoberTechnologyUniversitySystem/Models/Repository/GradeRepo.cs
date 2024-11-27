@@ -1,11 +1,9 @@
 ﻿using ControlOctoberTechnologyUniversitySystem.BusinessLogic;
-
 using ControlOctoberTechnologyUniversitySystem.Models.Interfaces;
-using MathNet.Numerics.Distributions;
-using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
-using NuGet.Protocol;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
-using static ControlOctoberTechnologyUniversitySystem.BusinessLogic.ControlRole;
+
+using static ControlOctoberTechnologyUniversitySystem.Controllers.GradeController;
 
 namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
 {
@@ -20,6 +18,25 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
             _controlRole = controlRole;
 
             _logger = logger;
+        }
+
+
+        public async Task<IEnumerable<StudentSubject>> FilterGradesInSubject(GradeFilter? filter,Guid subjectId)
+        {
+            IQueryable<StudentSubject> query = _context.StudentSubjects.Where(s=> s.subject.Id==subjectId);
+            if (filter.graduated.HasValue)
+                query =query.Where(s => s.student.graduated ==  filter.graduated);
+            if (!string.IsNullOrEmpty(filter.StudentConstraint))
+                query = query.Where(s => s.student.StudentContraint == filter.StudentConstraint );
+            if (!string.IsNullOrEmpty(filter.StudentStatus)) 
+                query =query.Where(s => s.student.StudentStatus == filter.StudentStatus);
+            return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<StudentSubject>> GetGradesInSubject(Guid subjectId)
+        {
+            IQueryable<StudentSubject> query = _context.StudentSubjects.Where(s=> s.subject.Id==subjectId);
+            return await query.ToListAsync();
         }
         public async Task<List<StudentSubject>> AddStudentGrade(List<StudentSubject> studentsSubjects, Guid subjectId)
         {
@@ -116,6 +133,8 @@ namespace ControlOctoberTechnologyUniversitySystem.Models.Repository
                 throw new Exception("Can not delete student grade !"); 
             }
         }
+
+        
 
         public StudentSubject GetStudentGradeInSubject(Guid studentId, Guid subjectId)
         {

@@ -63,7 +63,7 @@ builder.Services.AddSwaggerGen(c =>
 //-----------------------------------------------------//
 builder.Services.AddDbContext<ControlDbContext>(options => {
     options.UseSqlServer(
-        builder.Configuration["ConnectionStrings:ControlDBContextConnection"]);
+        builder.Configuration["ConnectionStrings:UbuntuConnection"]);
 });
 
 //-------------------------------------------------------//

@@ -23,7 +23,20 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
             _mapper = mapper;
             _gradeRepo = gradeRepo;
         }
+        /// <summary>
+        /// Represents the filter options for retrieving grades in a subject.
+        /// </summary>
+        public class GradeFilter
+        {
+            
+            public bool? graduated;
+            
+            public string? StudentConstraint;
+            
+            public string? StudentStatus;
+        }
 
+        
         [HttpGet("student/{studentId}")]
         public IActionResult GetStudentGrades(Guid studentId)
         {
@@ -38,6 +51,73 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"can not get category  : {ex}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        
+        /// <summary>
+        /// filter grade students in subjects.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/grades/subject/[subjectId]
+        ///     params [
+        ///         graduated,
+        ///         StudentConstraint,
+        ///         StudentStatus
+        ///     ]
+        ///
+        /// </remarks>
+        /// <param name="grades">The enrollment details.</param>
+        /// <returns>Returns the result of the grade process.</returns>
+        [HttpGet("subject/{subjectId}/filter")]
+
+        public async  Task<ActionResult<IEnumerable<StudentSubject>>> GetGradesFilteredInSupject([FromQuery] GradeFilter? filter,Guid subjectId) {
+            try
+            {
+                // without filter its return all grades in subject 
+                if(filter is null)
+                {
+                    var students = _gradeRepo.FilterGradesInSubject(filter,subjectId);
+                    if (students == null)
+                    {
+                        return NotFound();
+                    }
+                    return Ok(students);
+                }
+
+                var result  = await _gradeRepo.FilterGradesInSubject(filter,subjectId);
+                if(result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"can not get grades  : {ex}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("subject/{subjectId}")]
+
+        public async  Task<ActionResult<IEnumerable<StudentSubject>>> GetGradesInSupject(Guid subjectId) {
+            try
+            {
+                
+                var students = _gradeRepo.GetGradesInSubject(subjectId);
+                if (students == null)
+                {
+                    return NotFound();
+                }
+                return Ok(students); 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"can not get grades  : {ex}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -59,6 +139,9 @@ namespace ControlOctoberTechnologyUniversitySystem.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+
+
 
 
         [HttpPut("{subjectId}")]
